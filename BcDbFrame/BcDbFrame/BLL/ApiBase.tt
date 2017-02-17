@@ -1,0 +1,54 @@
+﻿<#@ output extension=".cs" #>
+<#@ include file="MultiOutput.tt" #>
+
+<#
+	 List<string> names=new List<string>(){};
+	 names.Add("BaseFunction");
+	 names.Add("BaseRole");
+	 names.Add("BaseUser");
+	 names.Add("BaseUserDetail");
+	 names.Add("BaseApp");
+	 names.Add("BaseLog");
+	 names.Add("BaseApiRecord");
+foreach (string name in names)
+    {
+#>
+using BcDbFrame.DAL;
+using BcDbFrame.Entity.ApiBase;
+using BcDbFrame.Singleton;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BcDbFrame.BLL.ApiBase
+{
+    public partial class <#= name #>BLL : BaseBLL<<#= name #>>
+    {
+        private readonly BaseDAL<<#= name #>> _<#= name #>Dal;
+        public <#= name #>BLL()
+            : base()
+        {
+            _<#= name #>Dal = base.Dal;
+        }
+
+		#region 单例模式
+
+
+        public static <#= name #>BLL Instance
+        {
+            get
+            {
+                return Singleton<<#= name #>BLL>.Instance;
+            }
+        }
+
+        #endregion
+    }
+}
+    <# SaveOutput(""+name+"BLL.cs"); #>
+<#
+}
+DeleteOldOutputs();
+#>
